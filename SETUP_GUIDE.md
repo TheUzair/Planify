@@ -317,7 +317,7 @@ git commit -m "Initial commit - Task Manager Pro"
 
 # Create a new repository on GitHub
 # Then push your code
-git remote add origin https://github.com/yourusername/task-manager-pro.git
+git remote add origin https://github.com/TheUzair/task-manager-pro.git
 git branch -M main
 git push -u origin main
 ```

@@ -4,9 +4,9 @@ A production-ready task management application built with Next.js, featuring ent
 
 ## 🌐 Live Demo
 
-**Live URL:** [Will be added after deployment]
+**Live URL:** (https://task-manager-pro-sable.vercel.app/)
 
-**GitHub Repository:** [Your GitHub URL]
+**GitHub Repository:** (https://github.com/TheUzair/Task-Manager-Pro)
 
 ## ✨ Features
 
@@ -569,8 +569,8 @@ This project is licensed under the MIT License.
 
 **Your Name**
 
-- GitHub: [@yourusername](https://github.com/yourusername)
-- Email: your.email@example.com
+- GitHub: [@TheUzair](https://github.com/TheUzair)
+- Email: mohujer90@gmail.com
 
 ## 🙏 Acknowledgments
 
