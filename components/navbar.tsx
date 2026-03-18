@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
+import { Bars3Icon, XMarkIcon, ShieldCheckIcon } from "@heroicons/react/24/outline";
 
 const navigation = [
   { name: "Home", href: "/" },
@@ -69,11 +69,21 @@ export function Navbar() {
 
 
             {session ? (
-              <Link href="/dashboard">
-                <Button size="sm" className="hidden md:inline-flex cursor-pointer bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 hover:scale-105 transition-all shadow-md hover:shadow-lg">
-                  Dashboard
-                </Button>
-              </Link>
+              <div className="hidden md:flex items-center gap-2">
+                {(session.user as { role?: string }).role === "ADMIN" && (
+                  <Link href="/admin">
+                    <Button size="sm" variant="outline" className="cursor-pointer border-purple-300 text-purple-700 hover:bg-purple-50 dark:border-purple-700 dark:text-purple-300 dark:hover:bg-purple-900/20 hover:scale-105 transition-all gap-1.5">
+                      <ShieldCheckIcon className="h-4 w-4" />
+                      Admin
+                    </Button>
+                  </Link>
+                )}
+                <Link href="/dashboard">
+                  <Button size="sm" className="cursor-pointer bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 hover:scale-105 transition-all shadow-md hover:shadow-lg">
+                    Dashboard
+                  </Button>
+                </Link>
+              </div>
             ) : (
               <div className="hidden md:flex md:items-center md:space-x-2">
                 <Link href="/auth/signin">
@@ -131,11 +141,21 @@ export function Navbar() {
 
               <div className="pt-4 space-y-2">
                 {session ? (
-                  <Link href="/dashboard" onClick={() => setMobileMenuOpen(false)}>
-                    <Button size="sm" className="w-full cursor-pointer bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 hover:scale-105 transition-all shadow-md hover:shadow-lg">
-                      Dashboard
-                    </Button>
-                  </Link>
+                  <div className="space-y-2">
+                    <Link href="/dashboard" onClick={() => setMobileMenuOpen(false)}>
+                      <Button size="sm" className="w-full cursor-pointer bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 hover:scale-105 transition-all shadow-md hover:shadow-lg">
+                        Dashboard
+                      </Button>
+                    </Link>
+                    {(session.user as { role?: string }).role === "ADMIN" && (
+                      <Link href="/admin" onClick={() => setMobileMenuOpen(false)}>
+                        <Button size="sm" variant="outline" className="w-full cursor-pointer border-purple-300 text-purple-700 hover:bg-purple-50 dark:border-purple-700 dark:text-purple-300 dark:hover:bg-purple-900/20 transition-all gap-1.5">
+                          <ShieldCheckIcon className="h-4 w-4" />
+                          Admin Panel
+                        </Button>
+                      </Link>
+                    )}
+                  </div>
                 ) : (
                   <>
                     <Link href="/auth/signin" onClick={() => setMobileMenuOpen(false)}>
