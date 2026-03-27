@@ -6,6 +6,11 @@ import bcrypt from "bcryptjs";
 import { connectDB } from "./db";
 import User from "./models/User";
 
+// Auto-detect NEXTAUTH_URL on Vercel when not explicitly set
+if (!process.env.NEXTAUTH_URL && process.env.VERCEL_URL) {
+  process.env.NEXTAUTH_URL = `https://${process.env.VERCEL_URL}`;
+}
+
 export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [
     Google({

@@ -1,10 +1,9 @@
 import mongoose from "mongoose";
 
-const MONGODB_URI = process.env.DATABASE_URL!;
+// Use DATABASE_URL from environment; falls back to local MongoDB for development
+const MONGODB_URI =
+  process.env.DATABASE_URL || "mongodb://localhost:27017/planify";
 
-if (!MONGODB_URI) {
-  throw new Error("Please define DATABASE_URL in your .env file");
-}
 
 declare global {
   var mongoose: { conn: mongoose.Connection | null; promise: Promise<mongoose.Connection> | null };
