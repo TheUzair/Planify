@@ -1,6 +1,6 @@
-# Setup Guide - Task Manager Pro
+# Setup Guide - Planify
 
-This guide will walk you through setting up the Task Manager Pro application from scratch.
+This guide will walk you through setting up the Planify application from scratch.
 
 ## Table of Contents
 
@@ -22,7 +22,7 @@ Before you begin, ensure you have the following installed:
 - **Node.js** 18.x or higher ([Download](https://nodejs.org/))
 - **npm** (comes with Node.js) or **yarn**
 - **Git** ([Download](https://git-scm.com/))
-- **PostgreSQL** database (local or cloud)
+- **MongoDB** database (local or [MongoDB Atlas](https://www.mongodb.com/atlas) free tier)
 
 Verify installations:
 
@@ -40,7 +40,7 @@ git --version
 
 ```bash
 git clone <your-repository-url>
-cd task-manager-pro
+cd planify
 ```
 
 ### Step 2: Install Dependencies
@@ -53,7 +53,7 @@ This will install all required dependencies including:
 
 - Next.js 16
 - NextAuth.js v5
-- Prisma ORM
+- Mongoose ODM
 - Tailwind CSS
 - And more...
 
@@ -61,69 +61,41 @@ This will install all required dependencies including:
 
 ## Database Configuration
 
-You have three options for setting up your database:
+You have two options for setting up your MongoDB database:
 
-### Option 1: Prisma Postgres (Recommended for Quick Start)
+### Option 1: MongoDB Atlas (Recommended)
 
-The easiest way to get started. Prisma will run a local PostgreSQL instance for you.
+The easiest way to get started with a free cloud-hosted database.
 
-```bash
-# Start Prisma Postgres
-npx prisma dev
+1. Go to [mongodb.com/atlas](https://www.mongodb.com/atlas)
+2. Sign up for a free account
+3. Create a new cluster (M0 Free Tier)
+4. Click "Connect" > "Connect your application"
+5. Copy the connection string and add to `.env`:
+
+```env
+DATABASE_URL="mongodb+srv://<username>:<password>@cluster0.xxxxx.mongodb.net/planify?retryWrites=true&w=majority"
 ```
 
-This will:
+> **Note:** Replace `<username>`, `<password>`, and the cluster URL with your actual values. Make sure to add your IP to the Atlas Network Access whitelist.
 
-- Start a local PostgreSQL server
-- Automatically configure your `DATABASE_URL`
-- Keep running in the background
+### Option 2: Local MongoDB
 
-### Option 2: Local PostgreSQL
-
-If you have PostgreSQL installed locally:
+If you have MongoDB installed locally:
 
 ```bash
-# Create a new database
-createdb taskmanager
+# Start MongoDB service (macOS with Homebrew)
+brew services start mongodb-community
 
-# Or using psql
-psql -U postgres
-CREATE DATABASE taskmanager;
-\q
+# Or on Windows, start the MongoDB service
+net start MongoDB
 ```
 
 Then set your `DATABASE_URL` in `.env`:
 
 ```env
-DATABASE_URL="postgresql://postgres:password@localhost:5432/taskmanager"
+DATABASE_URL="mongodb://localhost:27017/planify"
 ```
-
-### Option 3: Cloud Database (Recommended for Production)
-
-Use a cloud PostgreSQL provider:
-
-**Neon** (Recommended - Free tier available):
-
-1. Go to [neon.tech](https://neon.tech)
-2. Sign up and create a new project
-3. Copy the connection string
-4. Add to `.env`
-
-**Supabase**:
-
-1. Go to [supabase.com](https://supabase.com)
-2. Create a new project
-3. Go to Project Settings > Database
-4. Copy the connection string
-5. Add to `.env`
-
-**Railway**:
-
-1. Go to [railway.app](https://railway.app)
-2. Create a new project
-3. Add PostgreSQL service
-4. Copy the connection string
-5. Add to `.env`
 
 ---
 
@@ -184,31 +156,15 @@ openssl rand -hex 16
 
 ## Running the Application
 
-### Step 1: Generate Prisma Client
+### Step 1: (Optional) Seed the Database
 
 ```bash
-npx prisma generate
+npm run seed
 ```
 
-### Step 2: Run Database Migrations
+This creates sample users and tasks in your database.
 
-```bash
-npx prisma migrate dev --name init
-```
-
-This creates all necessary tables in your database.
-
-### Step 3: (Optional) Seed the Database
-
-You can manually create a user through the UI or use Prisma Studio:
-
-```bash
-npx prisma studio
-```
-
-This opens a GUI at `http://localhost:5555` where you can manually add data.
-
-### Step 4: Start the Development Server
+### Step 2: Start the Development Server
 
 ```bash
 npm run dev
@@ -240,7 +196,7 @@ Social login is optional but recommended for better UX.
    - Visit [console.cloud.google.com](https://console.cloud.google.com)
 2. **Create a New Project**
    - Click "Select Project" > "New Project"
-   - Name it "Task Manager Pro"
+   - Name it "Planify"
 3. **Enable Google+ API**
    - Go to "APIs & Services" > "Library"
    - Search for "Google+ API"
@@ -270,7 +226,7 @@ Social login is optional but recommended for better UX.
 2. **Create a New OAuth App**
    - Click "New OAuth App"
    - Fill in details:
-     - Application name: "Task Manager Pro"
+     - Application name: "Planify"
      - Homepage URL: `http://localhost:3000`
      - Authorization callback URL: `http://localhost:3000/api/auth/callback/github`
 3. **Generate Client Secret**
@@ -301,7 +257,7 @@ Now you'll see Google and GitHub login buttons on the sign-in page!
 
 - GitHub account
 - Vercel account (free at [vercel.com](https://vercel.com))
-- Cloud PostgreSQL database
+- MongoDB Atlas database (or local MongoDB)
 
 ### Step 1: Push to GitHub
 
@@ -313,11 +269,11 @@ git init
 git add .
 
 # Commit
-git commit -m "Initial commit - Task Manager Pro"
+git commit -m "Initial commit - Planify"
 
 # Create a new repository on GitHub
 # Then push your code
-git remote add origin https://github.com/TheUzair/task-manager-pro.git
+git remote add origin https://github.com/TheUzair/planify.git
 git branch -M main
 git push -u origin main
 ```
@@ -347,7 +303,7 @@ GITHUB_SECRET="your-github-secret"
 
 **Important Notes:**
 
-- Use a cloud PostgreSQL database for production
+- Use MongoDB Atlas for production
 - Generate NEW secrets for production (don't reuse dev secrets)
 - Update `NEXTAUTH_URL` to your Vercel domain
 - Update OAuth redirect URIs to include your Vercel domain
@@ -358,7 +314,7 @@ GITHUB_SECRET="your-github-secret"
 2. Wait for build to complete
 3. Visit your live site!
 
-### Step 5: Run Database Migrations
+### Step 5: Run Database Seed (Optional)
 
 After first deployment:
 
@@ -372,9 +328,9 @@ vercel login
 # Link project
 vercel link
 
-# Run migrations
+# Pull production env and seed
 vercel env pull .env.production
-npx prisma migrate deploy
+npm run seed
 ```
 
 ### Step 6: Update OAuth Redirect URIs
@@ -392,14 +348,14 @@ Don't forget to add your production URLs to:
 
 #### 1. Database Connection Error
 
-**Error:** `Can't reach database server`
+**Error:** `MongoServerError` or `MongoNetworkError`
 
 **Solution:**
 
-- Verify DATABASE_URL is correct
-- Ensure database server is running
-- Check network connectivity
-- For local PostgreSQL, ensure service is started
+- Verify DATABASE_URL is a valid MongoDB connection string
+- Ensure MongoDB server is running (local) or Atlas cluster is active
+- Check your IP is whitelisted in MongoDB Atlas Network Access
+- Verify username and password are correct
 
 #### 2. NextAuth Error
 
@@ -411,15 +367,15 @@ Don't forget to add your production URLs to:
 - Must be at least 32 characters
 - Restart the dev server
 
-#### 3. Prisma Client Not Found
+#### 3. Mongoose Connection Not Found
 
-**Error:** `Cannot find module '@/lib/generated/prisma'`
+**Error:** `MongooseError: Operation ... timed out`
 
 **Solution:**
 
-```bash
-npx prisma generate
-```
+- Verify your `DATABASE_URL` is set correctly in `.env`
+- Check that your MongoDB instance is running and reachable
+- Restart the dev server after changing `.env`
 
 #### 4. OAuth Not Working
 
@@ -459,7 +415,7 @@ If you encounter issues:
 
 1. Check the [Next.js Documentation](https://nextjs.org/docs)
 2. Review [NextAuth.js Docs](https://next-auth.js.org)
-3. Check [Prisma Documentation](https://www.prisma.io/docs)
+3. Check [Mongoose Documentation](https://mongoosejs.com/docs/)
 4. Search [GitHub Discussions](https://github.com/vercel/next.js/discussions)
 
 ---
@@ -469,7 +425,7 @@ If you encounter issues:
 ### VS Code Extensions (Recommended)
 
 - ES7+ React/Redux/React-Native snippets
-- Prisma
+- MongoDB for VS Code
 - Tailwind CSS IntelliSense
 - ESLint
 - Prettier
@@ -482,12 +438,7 @@ npm run dev        # Start dev server
 npm run build      # Build for production
 npm run start      # Start production server
 npm run lint       # Run ESLint
-
-# Database
-npx prisma studio  # Open Prisma Studio GUI
-npx prisma migrate dev  # Create migration
-npx prisma generate     # Generate Prisma Client
-npx prisma db push      # Push schema to database
+npm run seed       # Seed the database
 
 # Debugging
 npm run dev -- --turbo  # Use Turbopack for faster builds
@@ -498,7 +449,7 @@ npm run dev -- --turbo  # Use Turbopack for faster builds
 - `/app` - Next.js App Router pages and API routes
 - `/components` - Reusable React components
 - `/lib` - Utility functions and configurations
-- `/prisma` - Database schema and migrations
+- `/lib/models` - Mongoose models (User, Task)
 - `/public` - Static assets
 
 ### Best Practices

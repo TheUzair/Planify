@@ -1,11 +1,11 @@
-# Task Manager Pro 🚀
+# Planify 🚀
 
-Scalable REST API + frontend testing UI built with Next.js, Prisma, PostgreSQL, JWT auth, and role-based access control (USER / ADMIN).
+Scalable REST API + frontend testing UI built with Next.js, MongoDB, Mongoose, JWT auth, and role-based access control (USER / ADMIN).
 
 ## 🌐 Live & Repo
 
-- Live URL: https://task-manager-pro-sable.vercel.app/
-- GitHub Repository: https://github.com/TheUzair/Task-Manager-Pro
+- Live URL: https://planify-sable.vercel.app/
+- GitHub Repository: https://github.com/TheUzair/planify
 
 ## ✅ Scope
 
@@ -17,7 +17,7 @@ Scalable REST API + frontend testing UI built with Next.js, Prisma, PostgreSQL, 
 - ✅ Full CRUD APIs for secondary entity (`tasks`)
 - ✅ API versioning under `/api/v1/*`
 - ✅ Validation + structured error handling with Zod + proper status codes
-- ✅ PostgreSQL database schema with Prisma ORM
+- ✅ MongoDB database schema with Mongoose ODM
 - ✅ API documentation via Postman collection
 
 ### Frontend (Supportive)
@@ -41,7 +41,7 @@ Scalable REST API + frontend testing UI built with Next.js, Prisma, PostgreSQL, 
 
 - **Frontend:** Next.js 16, React 19, TypeScript, Tailwind CSS v4, Framer Motion
 - **Backend:** Next.js Route Handlers (REST APIs)
-- **Database:** PostgreSQL (Neon) + Prisma v7
+- **Database:** MongoDB (Atlas or local) + Mongoose v8
 - **Authentication:** NextAuth v5 + custom JWT for API v1
 - **Validation:** Zod
 - **Security:** bcryptjs, jose, AES encryption
@@ -50,7 +50,7 @@ Scalable REST API + frontend testing UI built with Next.js, Prisma, PostgreSQL, 
 ## 🗂️ Project Structure (Key Paths)
 
 ```bash
-task-manager-pro/
+planify/
 ├── app/
 │   ├── api/
 │   │   ├── auth/                         # Legacy auth/session routes
@@ -72,13 +72,10 @@ task-manager-pro/
 │   ├── rbac.ts                           # requireAuth/requireAdmin
 │   ├── validations.ts                    # Zod schemas
 │   ├── encryption.ts                     # AES encrypt/decrypt
-│   └── prisma.ts                         # Prisma client
-├── prisma/
-│   ├── schema.prisma
-│   ├── migrations/
-│   └── seed.ts
+│   ├── db.ts                             # Mongoose connection
+│   └── models/                           # Mongoose models (User, Task)
 └── public/
-    └── Task-Manager-Pro.postman_collection.json
+    └── Planify.postman_collection.json
 ```
 
 ## 🗄️ Database Design
@@ -131,7 +128,7 @@ task-manager-pro/
 
 ### Postman
 
-- Import: `public/Task-Manager-Pro.postman_collection.json`
+- Import: `public/Planify.postman_collection.json`
 - Uses variables:
   - `{{baseUrl}}` (default: `http://localhost:3000`)
   - `{{token}}` (auto-set by login request scripts)
@@ -149,7 +146,7 @@ npm install
 Create `.env.local` (or `.env`) with:
 
 ```env
-DATABASE_URL="postgresql://..."
+DATABASE_URL="mongodb+srv://<user>:<password>@cluster.mongodb.net/<dbname>?retryWrites=true&w=majority"
 NEXTAUTH_SECRET="..."
 NEXTAUTH_URL="http://localhost:3000"
 JWT_SECRET="..."
@@ -162,10 +159,9 @@ GITHUB_ID="..."
 GITHUB_SECRET="..."
 ```
 
-### 3) Migrate + seed
+### 3) Seed (optional)
 
 ```bash
-npx prisma migrate dev
 npm run seed
 ```
 
@@ -179,7 +175,7 @@ Open: `http://localhost:3000`
 
 ## 👤 Seed Accounts
 
-- Admin: `admin@taskmanagerpro.com` / `Admin@123456`
+- Admin: `admin@planify.com` / `Admin@123456`
 - User: `alice@example.com` / `User@123456`
 - User: `bob@example.com` / `User@123456`
 - User: `carol@example.com` / `User@123456`
@@ -200,7 +196,7 @@ Open: `http://localhost:3000`
 - RBAC checks on protected APIs
 - Zod request validation
 - Encrypted task descriptions in DB
-- Prisma ORM (prevents raw SQL injection patterns by default)
+- ✅ Mongoose ODM (schema validation prevents injection patterns by default)
 
 ## 📈 Scalability Notes
 
@@ -215,7 +211,7 @@ Current structure is monolithic but modular and ready to scale:
 ## ✅ Evaluation Criteria Mapping
 
 - ✅ API design: REST endpoints, status codes, modular route structure, versioning
-- ✅ Database design: normalized Prisma schema + migrations + seed data
+- ✅ Database design: MongoDB schema with Mongoose ODM + seed data
 - ✅ Security: JWT, hashing, RBAC, validation, encrypted sensitive fields
 - ✅ Frontend integration: auth + protected dashboard + CRUD + admin management
 - ✅ Deployment readiness: production deploy on Vercel + Postman API docs
@@ -237,4 +233,4 @@ npm run seed
 
 ---
 
-Built with Next.js, TypeScript, Prisma, and PostgreSQL.
+Built with Next.js, TypeScript, MongoDB, and Mongoose.

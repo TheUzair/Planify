@@ -35,7 +35,7 @@ export default function AboutPage() {
           >
             <h1 className="text-5xl sm:text-6xl font-bold mb-6">
               About
-              <span className="text-gradient"> TaskManager Pro</span>
+              <span className="text-gradient"> Planify</span>
             </h1>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
               Building the future of task management with modern technology
@@ -57,7 +57,7 @@ export default function AboutPage() {
           >
             <h2 className="text-4xl font-bold mb-6">Our Mission</h2>
             <p className="text-lg text-muted-foreground leading-relaxed mb-8">
-              At TaskManager Pro, we believe that productivity tools should be powerful yet simple,
+              At Planify, we believe that productivity tools should be powerful yet simple,
               secure yet accessible, and professional yet delightful to use. Our mission is to provide
               developers and teams with a task management solution that meets enterprise-grade standards
               while maintaining an intuitive and modern user experience.
@@ -117,16 +117,16 @@ export default function AboutPage() {
           >
             <h2 className="text-4xl font-bold mb-6">Built with Modern Tech</h2>
             <p className="text-lg text-muted-foreground leading-relaxed mb-12">
-              TaskManager Pro is built using cutting-edge technologies to ensure the best
+              Planify is built using cutting-edge technologies to ensure the best
               performance, security, and developer experience.
             </p>
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
               {[
-                "Next.js 15",
+                "Next.js 16",
                 "TypeScript",
-                "Prisma ORM",
-                "PostgreSQL",
+                "Mongoose",
+                "MongoDB",
                 "NextAuth.js",
                 "Tailwind CSS",
                 "Framer Motion",

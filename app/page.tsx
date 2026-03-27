@@ -118,12 +118,12 @@ export default function Home() {
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
               <Link href="/auth/signup">
-                <Button size="lg" className="cursor-pointer text-lg px-8 h-14 w-full sm:w-auto bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 shadow-lg hover:shadow-xl transition-all hover:scale-105">
+                <Button size="lg" className="cursor-pointer text-lg px-8 h-14 w-full sm:w-auto bg-linear-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 shadow-lg hover:shadow-xl transition-all">
                   Get Started Free
                 </Button>
               </Link>
               <Link href="/features">
-                <Button size="lg" variant="outline" className="cursor-pointer text-lg px-8 h-14 w-full sm:w-auto hover:bg-accent hover:scale-105 transition-all">
+                <Button size="lg" variant="outline" className="cursor-pointer text-lg px-8 h-14 w-full sm:w-auto hover:bg-accent transition-all">
                   Explore Features
                 </Button>
               </Link>
@@ -178,7 +178,7 @@ export default function Home() {
                 transition={{ duration: 0.5, delay: 0.1 * index }}
                 className="group relative bg-card border border-border rounded-2xl p-8 hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
               >
-                <div className={`inline-flex p-3 rounded-xl bg-gradient-to-br ${feature.gradient} mb-6`}>
+                <div className={`inline-flex p-3 rounded-xl bg-linear-to-br ${feature.gradient} mb-6`}>
                   <feature.icon className="h-7 w-7 text-white" />
                 </div>
                 <h3 className="text-xl font-semibold mb-3">{feature.name}</h3>
@@ -199,7 +199,7 @@ export default function Home() {
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="relative rounded-3xl bg-gradient-to-br from-blue-600 to-purple-600 p-12 text-center text-white overflow-hidden"
+            className="relative rounded-3xl bg-linear-to-br from-blue-600 to-purple-600 p-12 text-center text-white overflow-hidden"
           >
             <div className="absolute inset-0 bg-grid-white/10" />
             <div className="relative z-10">
@@ -207,7 +207,7 @@ export default function Home() {
                 Ready to boost your productivity?
               </h2>
               <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
-                Join thousands of developers who trust TaskManager Pro for their
+                Join thousands of developers who trust Planify for their
                 daily task management needs.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">

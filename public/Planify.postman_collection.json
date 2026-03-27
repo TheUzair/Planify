@@ -1,8 +1,8 @@
 {
   "info": {
-    "name": "Task Manager Pro — v1 API",
-    "_postman_id": "task-manager-pro-v1",
-    "description": "Complete REST API collection for Task Manager Pro.\n\n**RBAC Rules:**\n- USER: Can only manage their own tasks\n- ADMIN: Full platform access — all users, all tasks\n\n**Auth:** Set `{{token}}` variable from the Login response, or use NextAuth session cookies.\n\n**Base URL:** `{{baseUrl}}`",
+    "name": "Planify — v1 API",
+    "_postman_id": "planify-v1",
+    "description": "Complete REST API collection for Planify.\n\n**RBAC Rules:**\n- USER: Can only manage their own tasks\n- ADMIN: Full platform access — all users, all tasks\n\n**Auth:** Set `{{token}}` variable from the Login response, or use NextAuth session cookies.\n\n**Base URL:** `{{baseUrl}}`",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "variable": [
@@ -125,7 +125,7 @@
             },
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"email\": \"admin@taskmanagerpro.com\",\n  \"password\": \"Admin@123456\"\n}"
+              "raw": "{\n  \"email\": \"admin@planify.com\",\n  \"password\": \"Admin@123456\"\n}"
             }
           }
         },

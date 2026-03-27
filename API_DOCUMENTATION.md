@@ -1,4 +1,4 @@
-# API Documentation - Task Manager Pro
+# API Documentation - Planify
 
 ## Base URL
 
@@ -484,7 +484,7 @@ All error responses follow this format:
 - Password hashing with bcrypt (12 salt rounds)
 - Task descriptions encrypted with AES-256
 - Environment variables for sensitive keys
-- SQL injection prevention via Prisma ORM
+- NoSQL injection prevention via Mongoose ODM
 
 ### Input Validation
 

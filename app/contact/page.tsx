@@ -12,7 +12,7 @@ import { EnvelopeIcon, MapPinIcon, PhoneIcon } from "@heroicons/react/24/outline
 const contactInfo = [
   {
     name: "Email",
-    value: "hello@taskmanagerpro.com",
+    value: "hello@planify.com",
     icon: EnvelopeIcon,
   },
   {
@@ -171,7 +171,7 @@ export default function ContactPage() {
                 <h2 className="text-3xl font-bold mb-6">Contact Information</h2>
                 <p className="text-muted-foreground leading-relaxed">
                   Reach out to us through any of these channels. We&apos;re here to
-                  help you make the most of TaskManager Pro.
+                  help you make the most of Planify.
                 </p>
               </div>
 

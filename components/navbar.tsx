@@ -32,10 +32,10 @@ export function Navbar() {
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-2 group cursor-pointer">
             <div className="w-8 h-8 rounded-lg bg-linear-to-br from-blue-600 to-purple-600 flex items-center justify-center transition-transform group-hover:scale-110 group-hover:rotate-6">
-              <span className="text-white font-bold text-lg">T</span>
+              <span className="text-white font-bold text-lg">P</span>
             </div>
             <span className="text-xl font-bold bg-linear-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-              TaskManager Pro
+              Planify
             </span>
           </Link>
 

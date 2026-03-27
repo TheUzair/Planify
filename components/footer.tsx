@@ -122,9 +122,9 @@ export function Footer() {
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <div className="flex items-center space-x-2">
               <div className="w-6 h-6 rounded-lg bg-linear-to-br from-blue-600 to-purple-600 flex items-center justify-center">
-                <span className="text-white font-bold text-xs">T</span>
+                <span className="text-white font-bold text-xs">P</span>
               </div>
-              <span className="text-sm font-semibold">TaskManager Pro</span>
+              <span className="text-sm font-semibold">Planify</span>
             </div>
 
             <div className="flex justify-center">
