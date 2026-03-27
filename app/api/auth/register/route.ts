@@ -1,23 +1,26 @@
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
-import { prisma } from "@/lib/prisma";
+import { connectDB } from "@/lib/db";
+import User from "@/lib/models/User";
 import { registerSchema } from "@/lib/validations";
 import { z } from "zod";
+import { rateLimit } from "@/lib/rate-limit";
 
 export async function POST(request: NextRequest) {
+  const rl = rateLimit(request, { limit: 10, windowMs: 15 * 60 * 1000 });
+  if (!rl.success) {
+    return NextResponse.json(
+      { error: "Too many registration attempts. Please try again later." },
+      { status: 429, headers: { "Retry-After": String(Math.ceil((rl.resetAt - Date.now()) / 1000)) } }
+    );
+  }
+
   try {
     const body = await request.json();
-
-    // Validate input
     const validatedData = registerSchema.parse(body);
 
-    // Check if user already exists
-    const existingUser = await prisma.user.findUnique({
-      where: {
-        email: validatedData.email,
-      },
-    });
-
+    await connectDB();
+    const existingUser = await User.findOne({ email: validatedData.email });
     if (existingUser) {
       return NextResponse.json(
         { error: "User with this email already exists" },
@@ -25,43 +28,25 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Hash password
     const hashedPassword = await bcrypt.hash(validatedData.password, 12);
-
-    // Create user
-    const user = await prisma.user.create({
-      data: {
-        name: validatedData.name,
-        email: validatedData.email,
-        password: hashedPassword,
-      },
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        createdAt: true,
-      },
+    const user = await User.create({
+      name: validatedData.name,
+      email: validatedData.email,
+      password: hashedPassword,
     });
 
     return NextResponse.json(
       {
         message: "User registered successfully",
-        user,
+        user: { id: user._id.toString(), name: user.name, email: user.email, createdAt: user.createdAt },
       },
       { status: 201 }
     );
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return NextResponse.json(
-        { error: "Validation failed", details: error.issues },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Validation failed", details: error.issues }, { status: 400 });
     }
-
     console.error("Registration error:", error);
-    return NextResponse.json(
-      { error: "Internal server error" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

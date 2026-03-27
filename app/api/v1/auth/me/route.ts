@@ -1,27 +1,32 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import { connectDB } from "@/lib/db";
+import User from "@/lib/models/User";
+import Task from "@/lib/models/Task";
 import { requireAuth } from "@/lib/rbac";
+import mongoose from "mongoose";
 
 export async function GET(request: NextRequest) {
   const { error, user } = await requireAuth(request);
   if (error) return error;
 
-  const dbUser = await prisma.user.findUnique({
-    where: { id: user.id },
-    select: {
-      id: true,
-      name: true,
-      email: true,
-      role: true,
-      image: true,
-      createdAt: true,
-      _count: { select: { tasks: true } },
-    },
-  });
+  await connectDB();
+  const dbUser = await User.findById(user.id).select("-password").lean();
 
   if (!dbUser) {
     return NextResponse.json({ error: "User not found" }, { status: 404 });
   }
 
-  return NextResponse.json({ user: dbUser });
+  const taskCount = await Task.countDocuments({ userId: new mongoose.Types.ObjectId(user.id) });
+
+  return NextResponse.json({
+    user: {
+      id: dbUser._id.toString(),
+      name: dbUser.name,
+      email: dbUser.email,
+      role: dbUser.role,
+      image: dbUser.image,
+      createdAt: dbUser.createdAt,
+      _count: { tasks: taskCount },
+    },
+  });
 }

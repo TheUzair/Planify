@@ -1,8 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import { connectDB } from "@/lib/db";
+import Task from "@/lib/models/Task";
 import { requireAdmin } from "@/lib/rbac";
 import { decrypt } from "@/lib/encryption";
 import { taskQuerySchema } from "@/lib/validations";
+import mongoose from "mongoose";
 import { z } from "zod";
 
 // GET /api/v1/admin/tasks — all tasks across all users
@@ -16,32 +18,35 @@ export async function GET(request: NextRequest) {
     const { page, limit, status, search } = taskQuerySchema.parse(queryParams);
     const skip = (page - 1) * limit;
 
-    const where: Record<string, unknown> = {};
-    if (status) where.status = status;
-    if (search) where.title = { contains: search, mode: "insensitive" };
+    await connectDB();
+    const filter: Record<string, unknown> = {};
+    if (status) filter.status = status;
+    if (search) filter.title = { $regex: search, $options: "i" };
 
-    const [tasks, total] = await Promise.all([
-      prisma.task.findMany({
-        where,
-        skip,
-        take: limit,
-        orderBy: { createdAt: "desc" },
-        include: { user: { select: { id: true, name: true, email: true, role: true } } },
-      }),
-      prisma.task.count({ where }),
+    const [rawTasks, total] = await Promise.all([
+      Task.find(filter).sort({ createdAt: -1 }).skip(skip).limit(limit)
+        .populate("userId", "_id name email role")
+        .lean(),
+      Task.countDocuments(filter),
     ]);
 
-    const decryptedTasks = tasks.map((task: typeof tasks[0]) => ({
-      ...task,
-      description: task.description ? decrypt(task.description) : null,
-    }));
+    const tasks = (rawTasks as Record<string, unknown>[]).map((t) => {
+      const u = t.userId as Record<string, unknown>;
+      return {
+        id: (t._id as mongoose.Types.ObjectId).toString(),
+        title: t.title,
+        description: t.description ? (() => { try { return decrypt(t.description as string); } catch { return ""; } })() : null,
+        status: t.status,
+        createdAt: t.createdAt,
+        updatedAt: t.updatedAt,
+        user: u?._id ? { id: (u._id as mongoose.Types.ObjectId).toString(), name: u.name, email: u.email, role: u.role } : undefined,
+      };
+    });
 
     return NextResponse.json({
-      tasks: decryptedTasks,
+      tasks,
       pagination: {
-        total,
-        page,
-        limit,
+        total, page, limit,
         totalPages: Math.ceil(total / limit),
         hasNext: page < Math.ceil(total / limit),
         hasPrev: page > 1,
@@ -49,10 +54,7 @@ export async function GET(request: NextRequest) {
     });
   } catch (err) {
     if (err instanceof z.ZodError) {
-      return NextResponse.json(
-        { error: "Invalid query parameters", details: err.issues },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Invalid query parameters", details: err.issues }, { status: 400 });
     }
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }

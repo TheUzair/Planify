@@ -1,8 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
-import { prisma } from "@/lib/prisma";
+import { connectDB } from "@/lib/db";
+import Task from "@/lib/models/Task";
 import { createTaskSchema, taskQuerySchema } from "@/lib/validations";
 import { encrypt, decrypt } from "@/lib/encryption";
+import mongoose from "mongoose";
 import { z } from "zod";
 
 // GET /api/tasks - List tasks with pagination, filtering, and search
@@ -21,75 +23,43 @@ export async function GET(request: NextRequest) {
 
     const skip = (page - 1) * limit;
 
-    // Build where clause
-    const where: Record<string, unknown> = {
-      userId: session.user.id,
-    };
+    await connectDB();
 
-    if (status) {
-      where.status = status;
+    if (!mongoose.isValidObjectId(session.user.id)) {
+      return NextResponse.json({ error: "Invalid session. Please sign out and sign in again." }, { status: 401 });
     }
 
-    if (search) {
-      where.title = {
-        contains: search,
-        mode: 'insensitive',
-      };
-    }
+    const uid = new mongoose.Types.ObjectId(session.user.id);
+    const filter: Record<string, unknown> = { userId: uid };
+    if (status) filter.status = status;
+    if (search) filter.title = { $regex: search, $options: "i" };
 
-    // Get tasks and total count
-    const [tasks, total] = await Promise.all([
-      prisma.task.findMany({
-        where,
-        skip,
-        take: limit,
-        orderBy: {
-          createdAt: 'desc',
-        },
-        select: {
-          id: true,
-          title: true,
-          description: true,
-          status: true,
-          createdAt: true,
-          updatedAt: true,
-        },
-      }),
-      prisma.task.count({ where }),
+    const [rawTasks, total] = await Promise.all([
+      Task.find(filter).sort({ createdAt: -1 }).skip(skip).limit(limit).lean(),
+      Task.countDocuments(filter),
     ]);
 
-    // Decrypt descriptions
-    const decryptedTasks = tasks.map((task: typeof tasks[0]) => ({
-      ...task,
-      description: task.description ? decrypt(task.description) : null,
+    const tasks = rawTasks.map((t: Record<string, unknown>) => ({
+      id: (t._id as mongoose.Types.ObjectId).toString(),
+      title: t.title,
+      description: t.description ? decrypt(t.description as string) : null,
+      status: t.status,
+      createdAt: t.createdAt,
+      updatedAt: t.updatedAt,
     }));
 
     const totalPages = Math.ceil(total / limit);
 
     return NextResponse.json({
-      tasks: decryptedTasks,
-      pagination: {
-        total,
-        page,
-        limit,
-        totalPages,
-        hasNext: page < totalPages,
-        hasPrev: page > 1,
-      },
+      tasks,
+      pagination: { total, page, limit, totalPages, hasNext: page < totalPages, hasPrev: page > 1 },
     });
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return NextResponse.json(
-        { error: "Invalid query parameters", details: error.issues },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Invalid query parameters", details: error.issues }, { status: 400 });
     }
-
     console.error("Error fetching tasks:", error);
-    return NextResponse.json(
-      { error: "Internal server error" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }
 
@@ -106,46 +76,34 @@ export async function POST(request: NextRequest) {
     const validatedData = createTaskSchema.parse(body);
 
     // Encrypt sensitive description if provided
+    await connectDB();
     const encryptedDescription = validatedData.description
       ? encrypt(validatedData.description)
       : null;
 
-    const task = await prisma.task.create({
-      data: {
-        title: validatedData.title,
-        description: encryptedDescription,
-        status: validatedData.status,
-        userId: session.user.id,
-      },
-      select: {
-        id: true,
-        title: true,
-        description: true,
-        status: true,
-        createdAt: true,
-        updatedAt: true,
-      },
+    const doc = await Task.create({
+      title: validatedData.title,
+      description: encryptedDescription,
+      status: validatedData.status,
+      userId: new mongoose.Types.ObjectId(session.user.id),
     });
 
-    return NextResponse.json(
-      {
-        message: "Task created successfully",
-        task,
-      },
-      { status: 201 }
-    );
+    const task = {
+      id: doc._id.toString(),
+      title: doc.title,
+      description: validatedData.description ?? null,
+      status: doc.status,
+      createdAt: doc.createdAt,
+      updatedAt: doc.updatedAt,
+    };
+
+    return NextResponse.json({ message: "Task created successfully", task }, { status: 201 });
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return NextResponse.json(
-        { error: "Validation failed", details: error.issues },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Validation failed", details: error.issues }, { status: 400 });
     }
-
     console.error("Error creating task:", error);
-    return NextResponse.json(
-      { error: "Internal server error" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }
+

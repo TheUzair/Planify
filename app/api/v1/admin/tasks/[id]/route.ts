@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import { connectDB } from "@/lib/db";
+import Task from "@/lib/models/Task";
 import { requireAdmin } from "@/lib/rbac";
+import mongoose from "mongoose";
 
 // DELETE /api/v1/admin/tasks/[id] — admin can hard-delete any task
 export async function DELETE(
@@ -11,11 +13,12 @@ export async function DELETE(
   if (error) return error;
 
   const { id } = await params;
+  if (!mongoose.isValidObjectId(id)) return NextResponse.json({ error: "Task not found" }, { status: 404 });
 
-  const existing = await prisma.task.findUnique({ where: { id } });
+  await connectDB();
+  const existing = await Task.findById(id).lean();
   if (!existing) return NextResponse.json({ error: "Task not found" }, { status: 404 });
 
-  await prisma.task.delete({ where: { id } });
-
+  await Task.findByIdAndDelete(id);
   return NextResponse.json({ message: "Task deleted successfully" });
 }
