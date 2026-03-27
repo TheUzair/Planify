@@ -73,13 +73,13 @@ export function TaskCard({ task, onView, onEdit, onDelete }: TaskCardProps) {
 
   return (
     <motion.div
-      whileHover={{ y: -4 }}
+      whileHover={{ y: -2 }}
       transition={{ duration: 0.2 }}
       className="h-full"
     >
-      <Card className={`h-full flex flex-col glass hover:shadow-2xl transition-all duration-300 border-2 hover:border-primary/30 bg-linear-to-br ${statusConfig.gradient} relative overflow-hidden group`}>
+      <Card className={`h-full flex flex-col hover:shadow-lg transition-all duration-300 border hover:border-primary/20 bg-linear-to-br ${statusConfig.gradient} relative overflow-hidden group`}>
         {/* Decorative Corner Gradient */}
-        <div className="absolute top-0 right-0 w-32 h-32 bg-linear-to-br from-primary/10 to-transparent rounded-full blur-2xl group-hover:scale-150 transition-transform duration-500" />
+        <div className="absolute top-0 right-0 w-24 h-24 bg-linear-to-br from-primary/5 to-transparent rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
         <CardHeader className="pb-3 relative z-10">
           <div className="flex items-start justify-between gap-3 mb-2">
@@ -112,32 +112,32 @@ export function TaskCard({ task, onView, onEdit, onDelete }: TaskCardProps) {
           </div>
         </CardContent>
 
-        <CardFooter className="mt-auto flex gap-2 pt-4 border-t border-border/50 relative z-10 bg-background/50 backdrop-blur-sm">
+        <CardFooter className="mt-auto flex gap-2 pt-4 border-t border-border/50 relative z-10">
           <Button
             variant="outline"
             size="sm"
             onClick={() => onView(task.id)}
-            className="flex-1 hover:bg-blue-50 hover:text-blue-600 hover:border-blue-200 dark:hover:bg-blue-950/20 dark:hover:border-blue-900 dark:hover:text-blue-400 transition-all group/btn"
+            className="flex-1 hover:bg-blue-50 hover:text-blue-600 hover:border-blue-200 dark:hover:bg-blue-950/20 dark:hover:border-blue-800 dark:hover:text-blue-400 transition-all"
           >
-            <EyeIcon className="h-4 w-4 mr-1.5 group-hover/btn:scale-110 transition-transform" />
+            <EyeIcon className="h-4 w-4 mr-1.5" />
             View
           </Button>
           <Button
             variant="outline"
             size="sm"
             onClick={() => onEdit(task.id)}
-            className="flex-1 hover:bg-purple-50 hover:text-purple-600 hover:border-purple-200 dark:hover:bg-purple-950/20 dark:hover:border-purple-900 dark:hover:text-purple-400 transition-all group/btn"
+            className="flex-1 hover:bg-purple-50 hover:text-purple-600 hover:border-purple-200 dark:hover:bg-purple-950/20 dark:hover:border-purple-800 dark:hover:text-purple-400 transition-all"
           >
-            <PencilIcon className="h-4 w-4 mr-1.5 group-hover/btn:scale-110 transition-transform" />
+            <PencilIcon className="h-4 w-4 mr-1.5" />
             Edit
           </Button>
           <Button
             variant="outline"
             size="sm"
             onClick={() => onDelete(task.id, task.title)}
-            className="hover:bg-red-50 hover:text-red-600 hover:border-red-200 dark:hover:bg-red-950/20 dark:hover:border-red-900 dark:hover:text-red-400 transition-all group/btn"
+            className="hover:bg-red-50 hover:text-red-600 hover:border-red-200 dark:hover:bg-red-950/20 dark:hover:border-red-800 dark:hover:text-red-400 transition-all"
           >
-            <TrashIcon className="h-4 w-4 group-hover/btn:scale-110 transition-transform" />
+            <TrashIcon className="h-4 w-4" />
           </Button>
         </CardFooter>
       </Card>

@@ -10,7 +10,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
-import { CalendarIcon } from "@heroicons/react/24/outline";
+import { CalendarIcon, EyeIcon } from "@heroicons/react/24/outline";
 
 interface Task {
   id: string;
@@ -98,12 +98,19 @@ export function ViewTaskModal({ taskId, isOpen, onClose }: ViewTaskModalProps) {
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle>Task Details</DialogTitle>
-          <DialogDescription>
-            View complete information about this task
-          </DialogDescription>
+      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto glass border-2">
+        <DialogHeader className="space-y-3">
+          <div className="flex items-center gap-3">
+            <div className="h-12 w-12 rounded-xl bg-linear-to-br from-blue-600 to-cyan-600 flex items-center justify-center shadow-lg">
+              <EyeIcon className="w-6 h-6 text-white" />
+            </div>
+            <div>
+              <DialogTitle className="text-2xl">Task Details</DialogTitle>
+              <DialogDescription className="text-base">
+                View complete information about this task
+              </DialogDescription>
+            </div>
+          </div>
         </DialogHeader>
 
         {isLoading ? (
@@ -115,16 +122,22 @@ export function ViewTaskModal({ taskId, isOpen, onClose }: ViewTaskModalProps) {
             />
           </div>
         ) : error ? (
-          <div className="text-sm text-red-500 text-center py-4">{error}</div>
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="p-3 rounded-lg bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-900 text-sm text-red-600 dark:text-red-400 text-center"
+          >
+            {error}
+          </motion.div>
         ) : task ? (
-          <div className="space-y-6">
+          <div className="space-y-6 mt-2">
             <div>
-              <h3 className="text-sm font-medium text-muted-foreground mb-2">Title</h3>
+              <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2">Title</h3>
               <p className="text-lg font-semibold">{task.title}</p>
             </div>
 
             <div>
-              <h3 className="text-sm font-medium text-muted-foreground mb-2">Status</h3>
+              <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2">Status</h3>
               <Badge className={getStatusColor(task.status)}>
                 {getStatusLabel(task.status)}
               </Badge>
@@ -132,27 +145,27 @@ export function ViewTaskModal({ taskId, isOpen, onClose }: ViewTaskModalProps) {
 
             {task.description && (
               <div>
-                <h3 className="text-sm font-medium text-muted-foreground mb-2">Description</h3>
-                <div className="bg-muted rounded-lg p-4">
-                  <p className="text-sm whitespace-pre-wrap">{task.description}</p>
+                <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2">Description</h3>
+                <div className="bg-muted/50 rounded-xl p-4 border border-border">
+                  <p className="text-sm whitespace-pre-wrap leading-relaxed">{task.description}</p>
                 </div>
               </div>
             )}
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-4 p-4 rounded-xl bg-muted/30 border border-border">
               <div>
-                <h3 className="text-sm font-medium text-muted-foreground mb-2 flex items-center gap-2">
-                  <CalendarIcon className="h-4 w-4" />
-                  Created At
+                <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-1.5 flex items-center gap-1.5">
+                  <CalendarIcon className="h-3.5 w-3.5" />
+                  Created
                 </h3>
-                <p className="text-sm">{formatDate(task.createdAt)}</p>
+                <p className="text-sm font-medium">{formatDate(task.createdAt)}</p>
               </div>
               <div>
-                <h3 className="text-sm font-medium text-muted-foreground mb-2 flex items-center gap-2">
-                  <CalendarIcon className="h-4 w-4" />
+                <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-1.5 flex items-center gap-1.5">
+                  <CalendarIcon className="h-3.5 w-3.5" />
                   Last Updated
                 </h3>
-                <p className="text-sm">{formatDate(task.updatedAt)}</p>
+                <p className="text-sm font-medium">{formatDate(task.updatedAt)}</p>
               </div>
             </div>
           </div>

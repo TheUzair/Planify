@@ -12,7 +12,7 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
+import { ExclamationTriangleIcon, TrashIcon } from "@heroicons/react/24/outline";
 
 interface DeleteTaskModalProps {
   taskId: string | null;
@@ -62,30 +62,39 @@ export function DeleteTaskModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-md">
-        <DialogHeader>
+      <DialogContent className="max-w-md glass border-2 border-red-200/50 dark:border-red-900/50">
+        <DialogHeader className="space-y-3">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-red-100 dark:bg-red-900/20 rounded-full">
-              <ExclamationTriangleIcon className="h-6 w-6 text-red-600 dark:text-red-500" />
+            <div className="h-12 w-12 rounded-xl bg-red-100 dark:bg-red-900/30 flex items-center justify-center">
+              <ExclamationTriangleIcon className="h-6 w-6 text-red-600 dark:text-red-400" />
             </div>
-            <DialogTitle>Delete Task</DialogTitle>
+            <div>
+              <DialogTitle className="text-2xl">Delete Task</DialogTitle>
+              <DialogDescription className="text-base pt-1">
+                Are you sure you want to delete <span className="font-semibold text-foreground">&quot;{taskTitle}&quot;</span>?
+                This action cannot be undone.
+              </DialogDescription>
+            </div>
           </div>
-          <DialogDescription className="pt-4">
-            Are you sure you want to delete <span className="font-semibold">&quot;{taskTitle}&quot;</span>?
-            This action cannot be undone.
-          </DialogDescription>
         </DialogHeader>
 
         {error && (
-          <div className="text-sm text-red-500">{error}</div>
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="p-3 rounded-lg bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-900 text-sm text-red-600 dark:text-red-400"
+          >
+            {error}
+          </motion.div>
         )}
 
-        <DialogFooter>
+        <DialogFooter className="gap-2 sm:gap-0 mt-2">
           <Button
             type="button"
             variant="outline"
             onClick={onClose}
             disabled={isLoading}
+            className="hover:bg-gray-100 dark:hover:bg-gray-800"
           >
             Cancel
           </Button>
@@ -94,6 +103,7 @@ export function DeleteTaskModal({
             variant="destructive"
             onClick={handleDelete}
             disabled={isLoading}
+            className="shadow-lg hover:shadow-xl transition-all duration-300"
           >
             {isLoading ? (
               <span className="flex items-center gap-2">
@@ -105,7 +115,10 @@ export function DeleteTaskModal({
                 Deleting...
               </span>
             ) : (
-              "Delete Task"
+              <span className="flex items-center gap-2">
+                <TrashIcon className="h-4 w-4" />
+                Delete Task
+              </span>
             )}
           </Button>
         </DialogFooter>

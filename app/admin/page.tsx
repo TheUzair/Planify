@@ -251,7 +251,7 @@ export default function AdminPage() {
               <h1 className="text-xl font-bold bg-linear-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
                 Admin Control Panel
               </h1>
-              <p className="text-xs text-muted-foreground">Task Manager Pro</p>
+              <p className="text-xs text-muted-foreground">Planify</p>
             </div>
           </div>
           <div className="flex items-center gap-3">

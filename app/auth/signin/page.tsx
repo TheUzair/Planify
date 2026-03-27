@@ -51,12 +51,12 @@ export default function SignInPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950 p-4 relative overflow-hidden">
+    <div className="min-h-screen flex items-center justify-center bg-background p-4 relative overflow-hidden">
       {/* Floating Background Decorations */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-20 -left-40 w-96 h-96 bg-gradient-to-br from-indigo-200/30 to-purple-200/30 dark:from-purple-400/20 dark:to-pink-400/20 rounded-full blur-3xl animate-float" />
-        <div className="absolute top-60 -right-40 w-80 h-80 bg-gradient-to-br from-blue-200/30 to-cyan-200/30 dark:from-blue-400/20 dark:to-indigo-400/20 rounded-full blur-3xl animate-float" style={{ animationDelay: '2s' }} />
-        <div className="absolute bottom-20 left-1/3 w-72 h-72 bg-gradient-to-br from-purple-200/30 to-pink-200/30 dark:from-indigo-400/20 dark:to-purple-400/20 rounded-full blur-3xl animate-float" style={{ animationDelay: '4s' }} />
+      <div className="fixed inset-0 overflow-hidden pointer-events-none -z-10">
+        <div className="absolute top-20 -left-40 w-96 h-96 bg-linear-to-br from-indigo-500/8 to-purple-500/8 dark:from-indigo-500/5 dark:to-purple-500/5 rounded-full blur-3xl animate-float" />
+        <div className="absolute top-60 -right-40 w-80 h-80 bg-linear-to-br from-blue-500/8 to-cyan-500/8 dark:from-blue-500/5 dark:to-indigo-500/5 rounded-full blur-3xl animate-float" style={{ animationDelay: '2s' }} />
+        <div className="absolute bottom-20 left-1/3 w-72 h-72 bg-linear-to-br from-purple-500/8 to-pink-500/8 dark:from-indigo-500/5 dark:to-purple-500/5 rounded-full blur-3xl animate-float" style={{ animationDelay: '4s' }} />
       </div>
 
       <motion.div
@@ -68,7 +68,7 @@ export default function SignInPage() {
         <Card className="w-full max-w-md glass border-2 shadow-2xl">
           <CardHeader className="space-y-4 text-center pb-8">
             <div className="flex justify-center">
-              <div className="bg-gradient-to-br from-indigo-600 to-purple-600 p-3 rounded-2xl shadow-lg">
+              <div className="bg-linear-to-br from-indigo-600 to-purple-600 p-3 rounded-2xl shadow-lg">
                 <svg className="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
                 </svg>
@@ -122,7 +122,7 @@ export default function SignInPage() {
               )}
               <Button
                 type="submit"
-                className="w-full h-11 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+                className="w-full h-11 bg-linear-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white shadow-lg hover:shadow-xl transition-all duration-300"
                 disabled={isLoading}
               >
                 {isLoading ? (

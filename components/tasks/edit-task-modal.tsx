@@ -113,12 +113,21 @@ export function EditTaskModal({ taskId, isOpen, onClose, onTaskUpdated }: EditTa
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle>Edit Task</DialogTitle>
-          <DialogDescription>
-            Update the details of your task below.
-          </DialogDescription>
+      <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto glass border-2">
+        <DialogHeader className="space-y-3">
+          <div className="flex items-center gap-3">
+            <div className="h-12 w-12 rounded-xl bg-linear-to-br from-purple-600 to-indigo-600 flex items-center justify-center shadow-lg">
+              <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+              </svg>
+            </div>
+            <div>
+              <DialogTitle className="text-2xl">Edit Task</DialogTitle>
+              <DialogDescription className="text-base">
+                Update the details of your task below.
+              </DialogDescription>
+            </div>
+          </div>
         </DialogHeader>
 
         {isFetching ? (
@@ -130,9 +139,11 @@ export function EditTaskModal({ taskId, isOpen, onClose, onTaskUpdated }: EditTa
             />
           </div>
         ) : (
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-5 mt-4">
             <div className="space-y-2">
-              <Label htmlFor="edit-title">Title *</Label>
+              <Label htmlFor="edit-title" className="text-sm font-semibold">
+                Title <span className="text-red-500">*</span>
+              </Label>
               <Input
                 id="edit-title"
                 placeholder="Enter task title"
@@ -140,45 +151,57 @@ export function EditTaskModal({ taskId, isOpen, onClose, onTaskUpdated }: EditTa
                 onChange={(e) => setTitle(e.target.value)}
                 required
                 disabled={isLoading}
+                className="h-11 bg-background/50 backdrop-blur-sm border-2 focus:border-primary transition-all"
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="edit-description">Description</Label>
+              <Label htmlFor="edit-description" className="text-sm font-semibold">Description</Label>
               <textarea
                 id="edit-description"
                 placeholder="Enter task description (optional)"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 disabled={isLoading}
-                className="w-full min-h-25 px-3 py-2 text-sm rounded-md border border-input bg-background ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                className="w-full min-h-32 px-3 py-2.5 text-sm rounded-lg border-2 border-input bg-background/50 backdrop-blur-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-primary/20 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 transition-all"
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="edit-status">Status</Label>
+              <Label htmlFor="edit-status" className="text-sm font-semibold">Status</Label>
               <Select value={status} onValueChange={setStatus} disabled={isLoading}>
-                <SelectTrigger>
+                <SelectTrigger className="h-11 bg-background/50 backdrop-blur-sm border-2 focus:border-primary">
                   <SelectValue placeholder="Select status" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="TODO">To Do</SelectItem>
-                  <SelectItem value="IN_PROGRESS">In Progress</SelectItem>
-                  <SelectItem value="COMPLETED">Completed</SelectItem>
+                  <SelectItem value="TODO">📝 To Do</SelectItem>
+                  <SelectItem value="IN_PROGRESS">⚡ In Progress</SelectItem>
+                  <SelectItem value="COMPLETED">✅ Completed</SelectItem>
                 </SelectContent>
               </Select>
             </div>
             {error && (
-              <div className="text-sm text-red-500">{error}</div>
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="p-3 rounded-lg bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-900 text-sm text-red-600 dark:text-red-400"
+              >
+                {error}
+              </motion.div>
             )}
-            <DialogFooter>
+            <DialogFooter className="gap-2 sm:gap-0">
               <Button
                 type="button"
                 variant="outline"
                 onClick={onClose}
                 disabled={isLoading}
+                className="hover:bg-gray-100 dark:hover:bg-gray-800"
               >
                 Cancel
               </Button>
-              <Button type="submit" disabled={isLoading}>
+              <Button
+                type="submit"
+                disabled={isLoading}
+                className="bg-linear-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white shadow-lg hover:shadow-xl transition-all duration-300"
+              >
                 {isLoading ? (
                   <span className="flex items-center gap-2">
                     <motion.div
@@ -189,7 +212,12 @@ export function EditTaskModal({ taskId, isOpen, onClose, onTaskUpdated }: EditTa
                     Updating...
                   </span>
                 ) : (
-                  "Update Task"
+                  <span className="flex items-center gap-2">
+                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    Update Task
+                  </span>
                 )}
               </Button>
             </DialogFooter>

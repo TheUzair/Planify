@@ -142,12 +142,12 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-50 selection:bg-indigo-500/30">
+    <div className="min-h-screen bg-background text-foreground selection:bg-indigo-500/30">
       {/* Floating Background Decorations */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-20 -left-40 w-96 h-96 bg-linear-to-r from-indigo-100/20 to-purple-100/20 dark:from-indigo-950/40 dark:to-purple-950/40 rounded-full blur-3xl animate-float" />
-        <div className="absolute top-60 -right-40 w-80 h-80 bg-linear-to-r from-blue-100/20 to-cyan-100/20 dark:from-blue-950/40 dark:to-indigo-950/40 rounded-full blur-3xl animate-float" style={{ animationDelay: '2s' }} />
-        <div className="absolute bottom-20 left-1/3 w-72 h-72 bg-linear-to-r from-purple-100/20 to-pink-100/20 dark:from-indigo-950/40 dark:to-purple-950/40 rounded-full blur-3xl animate-float" style={{ animationDelay: '4s' }} />
+      <div className="fixed inset-0 overflow-hidden pointer-events-none -z-10">
+        <div className="absolute top-20 -left-40 w-96 h-96 bg-linear-to-r from-indigo-500/8 to-purple-500/8 dark:from-indigo-500/5 dark:to-purple-500/5 rounded-full blur-3xl animate-float" />
+        <div className="absolute top-60 -right-40 w-80 h-80 bg-linear-to-r from-blue-500/8 to-cyan-500/8 dark:from-blue-500/5 dark:to-indigo-500/5 rounded-full blur-3xl animate-float" style={{ animationDelay: '2s' }} />
+        <div className="absolute bottom-20 left-1/3 w-72 h-72 bg-linear-to-r from-purple-500/8 to-pink-500/8 dark:from-indigo-500/5 dark:to-purple-500/5 rounded-full blur-3xl animate-float" style={{ animationDelay: '4s' }} />
       </div>
 
       {/* Header with Glass Effect */}
@@ -161,7 +161,7 @@ export default function DashboardPage() {
                 </svg>
               </div>
               <h1 className="text-2xl font-bold text-gradient">
-                Task Manager Pro
+                Planify
               </h1>
             </div>
             <div className="flex items-center gap-4">
@@ -215,7 +215,7 @@ export default function DashboardPage() {
             <div className="flex flex-col sm:flex-row gap-4">
               <Button
                 onClick={() => setIsCreateModalOpen(true)}
-                className="sm:w-auto w-full bg-linear-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+                className="sm:w-auto w-full bg-linear-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white shadow-lg hover:shadow-xl transition-all duration-300"
                 size="lg"
               >
                 <PlusIcon className="h-5 w-5 mr-2" />
@@ -245,24 +245,24 @@ export default function DashboardPage() {
 
             {/* Stats Bar */}
             {tasks.length > 0 && (
-              <div className="mt-6 pt-6 border-t grid grid-cols-3 gap-4 text-center">
-                <div>
+              <div className="mt-6 pt-6 border-t border-border/50 grid grid-cols-3 gap-4 text-center">
+                <div className="p-3 rounded-xl bg-yellow-500/5 dark:bg-yellow-500/10">
                   <p className="text-2xl font-bold text-yellow-600 dark:text-yellow-400">
                     {tasks.filter(t => t.status === 'TODO').length}
                   </p>
-                  <p className="text-sm text-muted-foreground">To Do</p>
+                  <p className="text-xs font-medium text-muted-foreground mt-0.5">To Do</p>
                 </div>
-                <div>
+                <div className="p-3 rounded-xl bg-blue-500/5 dark:bg-blue-500/10">
                   <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">
                     {tasks.filter(t => t.status === 'IN_PROGRESS').length}
                   </p>
-                  <p className="text-sm text-muted-foreground">In Progress</p>
+                  <p className="text-xs font-medium text-muted-foreground mt-0.5">In Progress</p>
                 </div>
-                <div>
+                <div className="p-3 rounded-xl bg-green-500/5 dark:bg-green-500/10">
                   <p className="text-2xl font-bold text-green-600 dark:text-green-400">
                     {tasks.filter(t => t.status === 'COMPLETED').length}
                   </p>
-                  <p className="text-sm text-muted-foreground">Completed</p>
+                  <p className="text-xs font-medium text-muted-foreground mt-0.5">Completed</p>
                 </div>
               </div>
             )}
@@ -313,7 +313,7 @@ export default function DashboardPage() {
                 <Button
                   onClick={() => setIsCreateModalOpen(true)}
                   size="lg"
-                  className="bg-linear-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+                  className="bg-linear-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white shadow-lg hover:shadow-xl transition-all duration-300"
                 >
                   <PlusIcon className="h-5 w-5 mr-2" />
                   Create Your First Task
@@ -359,7 +359,7 @@ export default function DashboardPage() {
                     variant="outline"
                     onClick={() => setCurrentPage((p) => p - 1)}
                     disabled={!pagination.hasPrev}
-                    className="glass hover:glass hover:scale-105 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="glass hover:glass transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <svg className="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -377,7 +377,7 @@ export default function DashboardPage() {
                     variant="outline"
                     onClick={() => setCurrentPage((p) => p + 1)}
                     disabled={!pagination.hasNext}
-                    className="glass hover:glass hover:scale-105 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="glass hover:glass transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     Next
                     <svg className="w-4 h-4 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">

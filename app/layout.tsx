@@ -18,7 +18,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Task Manager Pro - Professional Task Management",
+  title: "Planify - Professional Task Management",
   description: "A production-ready task management application with authentication, security, and modern UI",
 };
 

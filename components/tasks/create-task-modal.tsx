@@ -33,10 +33,33 @@ export function CreateTaskModal({ isOpen, onClose, onTaskCreated }: CreateTaskMo
   const [description, setDescription] = useState("");
   const [status, setStatus] = useState("TODO");
   const [isLoading, setIsLoading] = useState(false);
+  const [isAiLoading, setIsAiLoading] = useState(false);
   const [error, setError] = useState("");
 
+  const handleAiSuggest = async () => {
+    if (!title.trim() || title.trim().length < 3) {
+      toast.error("Enter a task title (at least 3 characters) first");
+      return;
+    }
+    setIsAiLoading(true);
+    try {
+      const response = await fetch("/api/ai/suggest", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ title }),
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || "AI suggestion failed");
+      setDescription(data.suggestion);
+      toast.success("✨ AI description generated!");
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "AI suggestion failed");
+    } finally {
+      setIsAiLoading(false);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
     setError("");
     setIsLoading(true);
 
@@ -78,7 +101,7 @@ export function CreateTaskModal({ isOpen, onClose, onTaskCreated }: CreateTaskMo
       <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto glass border-2">
         <DialogHeader className="space-y-3">
           <div className="flex items-center gap-3">
-            <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center shadow-lg">
+            <div className="h-12 w-12 rounded-xl bg-linear-to-br from-indigo-600 to-purple-600 flex items-center justify-center shadow-lg">
               <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
               </svg>
@@ -107,7 +130,30 @@ export function CreateTaskModal({ isOpen, onClose, onTaskCreated }: CreateTaskMo
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="description" className="text-sm font-semibold">Description</Label>
+            <div className="flex items-center justify-between">
+              <Label htmlFor="description" className="text-sm font-semibold">Description</Label>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={handleAiSuggest}
+                disabled={isLoading || isAiLoading || title.trim().length < 3}
+                className="text-xs flex items-center gap-1.5 text-purple-600 border-purple-300 hover:bg-purple-50 dark:text-purple-400 dark:border-purple-800 dark:hover:bg-purple-950/20 transition-all"
+              >
+                {isAiLoading ? (
+                  <span className="flex items-center gap-1.5">
+                    <motion.div
+                      className="h-3 w-3 border-2 border-purple-600 border-t-transparent rounded-full"
+                      animate={{ rotate: 360 }}
+                      transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                    />
+                    Generating...
+                  </span>
+                ) : (
+                  <span>✨ AI Suggest</span>
+                )}
+              </Button>
+            </div>
             <textarea
               id="description"
               placeholder="Add more details about your task... (optional)"
@@ -152,7 +198,7 @@ export function CreateTaskModal({ isOpen, onClose, onTaskCreated }: CreateTaskMo
             <Button
               type="submit"
               disabled={isLoading}
-              className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white shadow-lg hover:shadow-xl transition-all duration-300"
+              className="bg-linear-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white shadow-lg hover:shadow-xl transition-all duration-300"
             >
               {isLoading ? (
                 <span className="flex items-center gap-2">
